@@ -1,4 +1,4 @@
-🚀 Project Title & Tagline
+🚀 Project: Indian Civic Issues
 ==========================
 
 **Node.js Gallery Project** 📸
@@ -112,10 +112,17 @@ To test the Node.js Gallery Project, follow these steps:
 --------------
 
 Here are some screenshots of the Node.js Gallery Project:
+Homepage
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/8f30d139-2b0a-4ba3-b6ad-e817380e818e" />
 
-* **Gallery interface**: [Screenshot of the gallery interface](https://example.com/gallery-interface.png)
-* **Image detail page**: [Screenshot of the image detail page](https://example.com/image-detail-page.png)
-* **Search results page**: [Screenshot of the search results page](https://example.com/search-results-page.png)
+Report Section
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/472ffb44-30b5-4ff2-b60f-d7b245b5e57d" />
+
+Gallery Section
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/556c9c15-bbc7-490a-a4bd-fa194a261101" />
+
+Leaderboard
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/6087ad24-1769-4497-bb23-f94f0e6232e6" />
 
 📦 API Reference
 -----------------
@@ -133,7 +140,7 @@ For more information about the API, please refer to the [API documentation](http
 👤 Author
 ---------
 
-The Node.js Gallery Project was created by [Your Name](https://example.com/your-username).
+The Node.js Gallery Project was created by Team SocioCoders.
 
 📝 License
 ---------
