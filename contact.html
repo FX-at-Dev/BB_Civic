@@ -1,0 +1,100 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact</title>
+    <link rel="stylesheet" href="assets/css/style.css"/>
+    <script defer src="assets/js/app.js"></script>
+    
+  </head>
+  <body>
+
+  <nav class="site">
+    <div class="container inner">
+      <a class="brand" href="index.html">
+        <div class="logo">CS</div>
+        <div>Indian Civic Sense</div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="upload.html">Report</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div style="display:flex; gap:.5rem; align-items:center">
+        <span id="nav-user" class="badge" style="display:none"></span>
+        <a class="btn secondary" href="login.html">Login</a>
+        <a class="btn" href="register.html">Sign up</a>
+      </div>
+    </div>
+  </nav>
+  <script>
+    (function(){
+      const u = IP.currentUser();
+      const navUser = document.getElementById("nav-user");
+      if (u) {
+        navUser.style.display = "inline-block";
+        navUser.textContent = u.name || u.email;
+        const login = document.querySelector('a[href="login.html"]');
+        const reg = document.querySelector('a[href="register.html"]');
+        if (login) login.outerHTML = '<button class="btn secondary" onclick="IP.logout()">Logout</button>';
+        if (reg) reg.remove();
+      }
+      const here = location.pathname.split('/').pop();
+      document.querySelectorAll("nav a").forEach(a=>{
+        if (a.getAttribute("href") === here) a.classList.add("active");
+      });
+    })();
+  </script>
+
+
+  <section>
+    <div class="container">
+      <h2>Contact</h2>
+      <p class="help">If you find any bugs on our website, please help us by reporting here.</p>
+      <div class="grid-2">
+        <div class="card">
+          
+          <form class="form" id="contact-form">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" type="email" name="email" placeholder="you@example.com" required />
+            </div>
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="What's up?" required></textarea>
+            </div>
+            <button class="btn" type="submit">Send</button>
+          </form>
+
+        </div>
+        <div class="card">
+          <h3>Other links</h3>
+          <ul>
+            <li><a href="/index.html" target="_blank" rel="noopener">Home Page</a></li>
+            <li><a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer>
+    <div class="container grid">
+      <div><strong>Indian Civic Sense</strong><br>
+      <small class="muted">You see a issue, click a picture and report it on our website.</small></div>
+      <div class="links">
+        <a href="terms.html">Terms</a> ·
+        <a href="legal.html">Legal</a>
+      </div>
+    </div>
+  </footer>
+
+  </body>
+  </html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body>
+
+<nav class="site">
+  <div class="container inner">
+    <a class="brand" href="index.html">
+      <div class="logo">CS</div>
+      <div>Indian Civic Sense</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="upload.html">Report</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div style="display:flex; gap:.5rem; align-items:center">
+      <span id="nav-user" class="badge" style="display:none"></span>
+      <a class="btn secondary" href="login.html">Login</a>
+      <a class="btn" href="register.html">Sign up</a>
+    </div>
+  </div>
+</nav>
+<script>
+  (function(){
+    // Placeholder (no login system yet)
+    const u = null; 
+    const navUser = document.getElementById("nav-user");
+    if (u) {
+      navUser.style.display = "inline-block";
+      navUser.textContent = u.name || u.email;
+      const login = document.querySelector('a[href="login.html"]');
+      const reg = document.querySelector('a[href="register.html"]');
+      if (login) login.outerHTML = '<button class="btn secondary">Logout</button>';
+      if (reg) reg.remove();
+    }
+    const here = location.pathname.split('/').pop();
+    document.querySelectorAll("nav a").forEach(a=>{
+      if (a.getAttribute("href") === here) a.classList.add("active");
+    });
+  })();
+</script>
+
+<section>
+  <div class="container">
+    <h2>Reports Gallery</h2>
+    <div id="gallery-grid" class="gallery grid"></div>
+  </div>
+</section>
+
+<script>
+  // Load reports dynamically from backend
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/reports");
+      const reports = await res.json();
+      const grid = document.getElementById("gallery-grid");
+
+      grid.innerHTML = "";
+
+      reports.forEach(r => {
+        const item = document.createElement("div");
+        item.className = "gallery-item card";
+
+        item.innerHTML = `
+          <div style="aspect-ratio: 4/3; width: 100%; overflow: hidden; border-radius:8px; background:#eee;">
+            <img src="${r.img}" alt="${r.description}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+          </div>
+          <div class="info" style="padding:.5rem 0">
+            <strong>${r.title}</strong>
+            <p>${r.description}</p>
+            <small>📍 ${r.lat}, ${r.lng}</small><br>
+            <small>📝 Status: <span class="${r.status.toLowerCase()}">${r.status}</span></small>
+          </div>
+        `;
+        grid.appendChild(item);
+      });
+    } catch (err) {
+      console.error("Error loading reports:", err);
+    }
+  });
+</script>
+
+<footer>
+  <div class="container grid">
+    <div><strong>Indian Civic Sense</strong><br>
+    <small class="muted">You see a issue, click a picture and report it on our website.</small></div>
+    <div class="links">
+      <a href="terms.html">Terms</a> ·
+      <a href="legal.html">Legal</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .gallery img {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 12px;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  }
+
+  /* Highlighted state */
+  .gallery img.temp-active {
+    transform: scale(1.2); /* zoom in */
+    box-shadow: 0 20px 45px rgba(0, 123, 255, 0.8); /* heavy blue glow */
+    border: 4px solid #1e90ff;
+  }
+
+  /* Ripple circle */
+  .ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    background: rgba(30, 144, 255, 0.5);
+    box-shadow: 0 0 40px rgba(30, 144, 255, 1);
+    animation: rippleEffect 0.9s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes rippleEffect {
+    to {
+      transform: translate(-50%, -50%) scale(5);
+      opacity: 0;
+    }
+  }
+
+  /* Gallery grid */
+  .gallery {
+    display:grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap:1rem;
+  }
+  .gallery-item {
+    background:#fff; 
+    border-radius:8px; 
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    overflow:hidden; 
+    transition:transform .2s;
+  }
+  .gallery-item:hover {transform:scale(1.02);}
+  .gallery-item img {width:100%; height:200px; object-fit:cover;}
+  .info {padding:10px;}
+  .status {font-size:13px; font-weight:bold; margin-top:5px;}
+  .status.reported {color:#f39c12;}
+  .status.inprocess {color:#3498db;}
+  .status.success {color:#27ae60;}
+</style>
+
+<script>
+  // Image click effect
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll(".gallery img");
+
+    images.forEach(img => {
+      img.addEventListener("click", function () {
+        img.classList.add("temp-active");
+
+        const circle = document.createElement("span");
+        circle.classList.add("ripple");
+
+        const rect = img.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.5;
+        circle.style.width = circle.style.height = `${size}px`;
+
+        img.parentElement.style.position = "relative";
+        img.parentElement.appendChild(circle);
+
+        setTimeout(() => circle.remove(), 900);
+        setTimeout(() => img.classList.remove("temp-active"), 800);
+      });
+    });
+  });
+</script>
+
+<script>
+  // Filters setup (safe check)
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchBox = document.getElementById("searchBox");
+    const statusFilter = document.getElementById("statusFilter");
+    const dateFilter = document.getElementById("dateFilter");
+
+    if (!searchBox || !statusFilter || !dateFilter) {
+      console.warn("⚠️ Filters not found, skipping filter setup");
+      return;
+    }
+
+    const galleryItems = document.querySelectorAll(".gallery-item");
+    const totalCount = document.getElementById("totalCount");
+    const reportedCount = document.getElementById("reportedCount");
+    const inprocessCount = document.getElementById("inprocessCount");
+    const successCount = document.getElementById("successCount");
+
+    function updateCounters() {
+      const visibleItems = document.querySelectorAll(".gallery-item:not([style*='display: none'])");
+      totalCount.textContent = visibleItems.length;
+      reportedCount.textContent = [...visibleItems].filter(i=>i.dataset.status==="Reported").length;
+      inprocessCount.textContent = [...visibleItems].filter(i=>i.dataset.status==="In Process").length;
+      successCount.textContent = [...visibleItems].filter(i=>i.dataset.status==="Success").length;
+    }
+
+    function applyFilters() {
+      const searchVal = searchBox.value.toLowerCase();
+      const statusVal = statusFilter.value;
+      const dateVal = dateFilter.value;
+
+      galleryItems.forEach(item => {
+        const location = item.dataset.location?.toLowerCase() || "";
+        const status = item.dataset.status;
+        const date = item.dataset.date;
+
+        let match = true;
+        if (searchVal && !location.includes(searchVal)) match = false;
+        if (statusVal !== "all" && status !== statusVal) match = false;
+        if (dateVal && date !== dateVal) match = false;
+
+        item.style.display = match ? "block" : "none";
+      });
+
+      updateCounters();
+    }
+
+    searchBox.addEventListener("input", applyFilters);
+    statusFilter.addEventListener("change", applyFilters);
+    dateFilter.addEventListener("change", applyFilters);
+
+    updateCounters();
+  });
+</script>
+
+</body>
+</html>
